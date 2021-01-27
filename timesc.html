@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Short Term Memory</title>
+  <script language="Javascript">
+
+    var NowDate =new Date();
+    var timeOne;
+    var timeTwo;
+    var timer = [];
+    var counter = 0;
+    
+    function startIt() {
+        timeOne=NowDate.getTime();
+    }
+
+    function continueIt() {
+        timeOne=NowDate.getTime();
+        document.getElementById('submit-button').style.visibility = 'visible';
+        document.getElementById('continue-experiment').style.visibility = 'hidden';
+    }
+    
+    function endIt() {
+        timeTwo=new Date();
+        timeTwo=timeTwo.getTime();
+        var your_time = (timeTwo-timeOne)/1000;
+        timer.push(your_time);
+        if (counter == 0){
+            alert("It took you " + your_time + " seconds.");
+        }
+        else
+        {
+            var person = prompt("It took you " + your_time + " seconds. \n Please enter your name", "Harry Potter");
+            
+            db.collection('users').add({
+                firstName: person,
+                firstTest: timer[0],
+                secondTest: timer[1]
+            });
+        }
+
+        counter++;
+        document.getElementById('header-text').innerText = "Word Set #2";
+        document.getElementById('test-image').src = "stroopb.gif";
+        document.getElementById('submit-button').style.display = 'none';
+        document.getElementById('continue-experiment').style.visibility = 'block';
+
+        if (counter==2)
+        {
+            console.log("Hide button");
+            document.getElementById('submit-button').style.visibility = 'block';
+            document.getElementById('continue-experiment').style.visibility = 'none';
+        }
+    }
+    
+    </script>
+    </head>
+    
+    <body onload="startIt()";>
+    
+    <p>
+    <h2 style="text-align: center;" id="header-text">Word Set #1</h2>
+    <div style="text-align: center;"><img src = "stroopa.gif" id="test-image">
+    <p>
+    <form>
+    <input id="submit-button" type="button" value=" Finish " onclick="endIt();">
+    <input id="continue-experiment" type="button" value=" Continue Experiment " onclick="continueIt()" style="display: none;">
+    </FORM>
+    <div style="margin: 10px;">
+    <a href="index.html">Test results</a></div>
+</div>
+     <!-- The core Firebase JS SDK is always required and must be listed first -->
+<script src="https://www.gstatic.com/firebasejs/8.2.4/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.2.4/firebase-firestore.js"></script>
+
+<!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#available-libraries -->
+
+<script>
+  // Your web app's Firebase configuration
+  var firebaseConfig = {
+    apiKey: "AIzaSyALmguTypLcvbYCFFVKo3YhTmrlIMg6Q5s",
+    authDomain: "colorexperiment-c34a9.firebaseapp.com",
+    projectId: "colorexperiment-c34a9",
+    storageBucket: "colorexperiment-c34a9.appspot.com",
+    messagingSenderId: "874993095832",
+    appId: "1:874993095832:web:311f330ca5f99e32d1aced"
+  };
+
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.firestore();
+  </script>
+  
+</body>
+</html>
