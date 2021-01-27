@@ -6,6 +6,9 @@ The famous "Stroop Effect" is named after J. Ridley Stroop who discovered this s
 
 ### Credits
 To create this project I used:
+
 [youtube](https://youtu.be/N3Fmwf8ylrs)
-[link]https://github.com/candraKriswinarto/firestore-crud
-[link]https://faculty.washington.edu/chudler/java/ready.html
+
+https://github.com/candraKriswinarto/firestore-crud
+
+https://faculty.washington.edu/chudler/java/ready.html
