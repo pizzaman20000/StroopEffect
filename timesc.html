@@ -18,8 +18,8 @@
 
     function continueIt() {
         timeOne=NowDate.getTime();
-        document.getElementById('submit-button').style.visibility = 'visible';
-        document.getElementById('continue-experiment').style.visibility = 'hidden';
+        document.getElementById('submit-button').style.display = '';
+        document.getElementById('continue-experiment').style.display = 'none';
     }
     
     function endIt() {
@@ -39,20 +39,22 @@
                 firstTest: timer[0],
                 secondTest: timer[1]
             });
+            document.getElementById('submit-button').style.display = 'none';
+            return;
         }
 
         counter++;
         document.getElementById('header-text').innerText = "Word Set #2";
         document.getElementById('test-image').src = "stroopb.gif";
         document.getElementById('submit-button').style.display = 'none';
-        document.getElementById('continue-experiment').style.visibility = 'block';
-
-        if (counter==2)
-        {
-            console.log("Hide button");
-            document.getElementById('submit-button').style.visibility = 'block';
-            document.getElementById('continue-experiment').style.visibility = 'none';
-        }
+        document.getElementById('continue-experiment').style.display = '';
+        
+        // if (counter==2)
+        // {
+        //     document.getElementById('submit-button').style.display="block" ;
+        //     document.getElementById('submit-button').style.visibility="visible" ;
+        //     document.getElementById('continue-experiment').style.display = 'none';
+        // }
     }
     
     </script>
@@ -60,17 +62,17 @@
     
     <body onload="startIt()";>
     
-    <p>
     <h2 style="text-align: center;" id="header-text">Word Set #1</h2>
     <div style="text-align: center;"><img src = "stroopa.gif" id="test-image">
-    <p>
-    <form>
-    <input id="submit-button" type="button" value=" Finish " onclick="endIt();">
-    <input id="continue-experiment" type="button" value=" Continue Experiment " onclick="continueIt()" style="display: none;">
-    </FORM>
-    <div style="margin: 10px;">
-    <a href="index.html">Test results</a></div>
-</div>
+        
+        <form>
+        <input id="submit-button" type="button" value=" Finish " onclick="endIt();">
+        <input id="continue-experiment" type="button" value=" Continue Experiment " onclick="continueIt()" style="display: none;text-align: center;">
+        </FORM>
+        <div style="margin: 10px;">
+            <a href="results.html">Test results</a>
+        </div>
+    </div>
      <!-- The core Firebase JS SDK is always required and must be listed first -->
 <script src="https://www.gstatic.com/firebasejs/8.2.4/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.2.4/firebase-firestore.js"></script>
