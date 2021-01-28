@@ -3,9 +3,10 @@ const tableUsers = document.querySelector('.table-users');
 let id;
 
 // Create element and render users
-const renderUser = doc => {
+const renderUser = (doc, index) => {
   const tr = `
     <tr data-id='${doc.id}'>
+      <td>${index}</td>
       <td>${doc.data().firstName}</td>
       <td>${doc.data().firstTest}</td>
       <td>${doc.data().secondTest}</td>
@@ -16,9 +17,11 @@ const renderUser = doc => {
 
 // Real time listener
 db.collection('users').onSnapshot(snapshot => {
+  var index = 1;
   snapshot.docChanges().forEach(change => {
     if(change.type === 'added') {
-      renderUser(change.doc);
+      renderUser(change.doc, index);
+      index++;
     }
   })
 })

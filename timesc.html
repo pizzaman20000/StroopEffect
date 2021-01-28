@@ -33,12 +33,14 @@
         else
         {
             var person = prompt("It took you " + your_time + " seconds. \n Please enter your name", "Harry Potter");
-            
-            db.collection('users').add({
-                firstName: person,
-                firstTest: timer[0],
-                secondTest: timer[1]
-            });
+            if (person!=null)
+            {
+                db.collection('users').add({
+                    firstName: person,
+                    firstTest: timer[0],
+                    secondTest: timer[1]
+                });
+            }   
             document.getElementById('submit-button').style.display = 'none';
             return;
         }
