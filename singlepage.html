@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stroop Effect</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="index" style="display: display">
+    <h2 style="text-align: center;"> Colors, Colors </h2>
+    <div style="padding: 10px;">
+        <p>The famous "Stroop Effect" is named after J. Ridley Stroop who
+        discovered this strange phenomenon in the 1930s.  Here is your job: name
+        the colors of the following words.  Do NOT read the words...rather, say
+        the color of the words.  For example, if the word "BLUE" is printed in a
+        red color, you should say "RED".  Say the colors as fast as you can.  It
+        is not as easy as you might think!</p>
+    </div>
+    
+    <p class="don" style="text-align: center;"> <img src="https://wave-rider.github.io/StroopEffect/colors2.gif" alt="" /> </p>
+    
+    <div style="padding: 10px;">
+        <p>Try this <a href="#" onclick="show('ready', 'index')">Interactive Stroop Effect
+        Experiment</a>.  The computer will keep track of the time it takes you to
+        say the colors of the words.</p>
+    </div>
+</div>
+
+<div id="ready" style="display: none">
+    <div style="padding: 10px;">
+        <h2 style="color: blue; text-align: center;">     
+        <span style="color:green">Stroop</span><span style="color:red;">Effect</span> 
+        <span style="color:orange">Experiment</span></h2>
+    </div>
+    <p style="padding: 10px;">
+    In this experiment you are required to say the color of the word, not what
+    the word says.  For example, for the word, <span
+    style="color:#0000cc"><strong>RED</strong></span>, you should say "Blue."</p>
+    <p style="padding: 10px;">
+    As soon as the words appear on your screen, read the list as fast as you
+    can.  When you have finished, click on the "Finish" button.  The time it
+    took you to read all of the words will be shown.  If you want to try the
+    same set of words, click on the "reload" button of your browser.  If you
+    want to continue with the experiment, click on "Continue Experiment."</p>
+    
+    <div style="text-align: center;"><a href="#" onclick="goToReady2();">Go to the first test.</a></div>    
+</div>
+
+<div id="ready2" style="display: none">
+    <hr><p style="text-align: center;font: 3em sans-serif;">
+        Get Ready...</p>
+</div>
+
+<div id="test" style="display: none;">
+    <h2 style="text-align: center;" id="header-text">Word Set #1</h2>
+    <div style="text-align: center;"><img src = "https://wave-rider.github.io/StroopEffect/stroopa.gif" id="test-image">
+        
+        <form>
+        <input id="submit-button" type="button" value=" Finish " onclick="endIt();" style="padding: 10px;">
+        <input id="continue-experiment" type="button" value=" Continue Experiment " onclick="continueIt()" style="display: none;text-align: center; padding: 10px;">
+        </form>
+        <div style="margin: 10px; display: none;" id="test-results">
+            <a href="#" onclick="show_results();">Test results</a>
+        </div>
+    </div>
+</div>
+
+<div class="container" id="results" style="display: none">
+    <header>
+      <h3>Test results</h3>
+    </header>
+    <div class="table-wrapper">
+      <table class="table-users">
+        <tr>
+          <th>&nbsp;</th>
+          <th>First Name</th>
+          <th>First Test</th>
+          <th>Second Test</th>
+        </tr>
+      </table>
+    <div style="text-align: center;"><a href="show('index', 'results');">Main</a></div>
+    </div>
+  
+</div>
+
+<script>
+    function show(shown, hidden) {
+      document.getElementById(shown).style.display='block';
+      document.getElementById(hidden).style.display='none';
+      return false;
+    }
+
+    function goToReady2(){
+        show('ready2', 'ready');
+        setTimeout(function(){ 
+            startIt();
+         }, 3000);
+    }
+
+    var NowDate =new Date();
+    var timeOne;
+    var timeTwo;
+    var timer = [];
+    var counter = 0;
+    
+    function startIt() {
+        show('test', 'ready2');
+        timeOne = NowDate.getTime();
+    }
+
+    function continueIt() {
+        timeOne = NowDate.getTime();
+        document.getElementById('submit-button').style.display = '';
+        document.getElementById('continue-experiment').style.display = 'none';
+    }
+    
+    function endIt() {
+        timeTwo = new Date();
+        timeTwo = timeTwo.getTime();
+        var your_time = (timeTwo-timeOne)/1000;
+        timer.push(your_time);
+        if (counter == 0){
+            alert("It took you " + your_time + " seconds.");
+        }
+        else
+        {
+            var person = prompt("It took you " + your_time + " seconds. \n Please enter your name", "Harry Potter");
+            if (person!=null)
+            {
+                db.collection('users').add({
+                    firstName: person,
+                    firstTest: timer[0],
+                    secondTest: timer[1]
+                });
+            }   
+            document.getElementById('submit-button').style.display = 'none';
+            document.getElementById('test-results').style.display='block';
+            return;
+        }
+
+        counter++;
+        document.getElementById('header-text').innerText = "Word Set #2";
+        document.getElementById('test-image').src = "https://wave-rider.github.io/StroopEffect/stroopb.gif";
+        document.getElementById('submit-button').style.display = 'none';
+        document.getElementById('continue-experiment').style.display = '';
+    }
+
+    function show_results()
+    {
+        show('results', 'test');
+        const tableUsers = document.querySelector('.table-users');
+        const renderUser = (doc, index) => {
+        const tr = `
+            <tr data-id='${doc.id}'>
+            <td>${index}</td>
+            <td>${doc.data().firstName}</td>
+            <td>${doc.data().firstTest}</td>
+            <td>${doc.data().secondTest}</td>
+            </tr>
+        `;
+        tableUsers.insertAdjacentHTML('beforeend', tr);
+        }
+
+        // Real time listener
+        db.collection('users').onSnapshot(snapshot => {
+        var index = 1;
+        snapshot.docChanges().forEach(change => {
+            if(change.type === 'added') {
+            renderUser(change.doc, index);
+            index++;
+            }
+        })
+        })
+    }
+    </script>
+    <script src="https://www.gstatic.com/firebasejs/8.2.4/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.2.4/firebase-firestore.js"></script>
+
+    <!-- TODO: Add SDKs for Firebase products that you want to use
+        https://firebase.google.com/docs/web/setup#available-libraries -->
+
+    <script>
+    // Your web app's Firebase configuration
+    var firebaseConfig = {
+        apiKey: "AIzaSyALmguTypLcvbYCFFVKo3YhTmrlIMg6Q5s",
+        authDomain: "colorexperiment-c34a9.firebaseapp.com",
+        projectId: "colorexperiment-c34a9",
+        storageBucket: "colorexperiment-c34a9.appspot.com",
+        messagingSenderId: "874993095832",
+        appId: "1:874993095832:web:311f330ca5f99e32d1aced"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+    </script>
+</body>
+</html>
