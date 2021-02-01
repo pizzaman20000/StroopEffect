@@ -103,7 +103,6 @@
          }, 3000);
     }
 
-    var NowDate = new Date();
     var timeOne;
     var timeTwo;
     var timer = [];
@@ -111,7 +110,7 @@
     
     function startIt() {
         show('test', 'ready2');
-        timeOne = NowDate.getTime();
+        timeOne = new Date().getTime();
     }
 
     function continueIt() {
@@ -128,8 +127,7 @@
     }
     
     function endIt() {
-        timeTwo = new Date();
-        timeTwo = timeTwo.getTime();
+        timeTwo = new Date().getTime();
         var your_time = (timeTwo-timeOne)/1000;
         timer.push(your_time);
         if (counter == 0){
