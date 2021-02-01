@@ -120,6 +120,8 @@
         document.getElementById('continue-experiment').style.display = 'none';
         setTimeout(function(){ 
             show('test', 'ready3');
+            document.getElementById('header-text').innerText = "Word Set #2";
+            document.getElementById('test-image').src = "https://wave-rider.github.io/StroopEffect/stroopb.gif";
             document.getElementById('submit-button').style.display = '';
             document.getElementById('continue-experiment').style.display = 'none';
          }, 3000);
@@ -150,8 +152,7 @@
         }
 
         counter++;
-        document.getElementById('header-text').innerText = "Word Set #2";
-        document.getElementById('test-image').src = "https://wave-rider.github.io/StroopEffect/stroopb.gif";
+       
         document.getElementById('submit-button').style.display = 'none';
         document.getElementById('continue-experiment').style.display = '';
     }
