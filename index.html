@@ -114,7 +114,6 @@
     }
 
     function continueIt() {
-        timeOne = new Date().getTime();
         show('ready3', 'test');
         document.getElementById('submit-button').style.display = 'none';
         document.getElementById('continue-experiment').style.display = 'none';
@@ -124,6 +123,7 @@
             document.getElementById('test-image').src = "https://wave-rider.github.io/StroopEffect/stroopb.gif";
             document.getElementById('submit-button').style.display = '';
             document.getElementById('continue-experiment').style.display = 'none';
+            timeOne = new Date().getTime();
          }, 3000);
         
     }
