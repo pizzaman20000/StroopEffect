@@ -25,6 +25,7 @@ function initDatabase()
   console.log(test_name);
   if (test_name==undefined)
     test_name = 'group1';
+    document.getElementById('test_name').innerHTML = test_name;
 
   db.collection(test_name).onSnapshot(snapshot => {
     var index = 1;

@@ -18,7 +18,7 @@
         is not as easy as you might think!</p>
     </div>
     
-    <p class="don" style="text-align: center;"> <img src="https://wave-rider.github.io/StroopEffect/colors2.gif" alt="" /> </p>
+    <p class="don" style="text-align: center;"> <img src="https://pizzaman20000.github.io/StroopEffect/colors2.gif" alt="" /> </p>
     
     <div style="padding: 10px;">
         <p>Try this <a href="#" onclick="show('ready', 'index')">Interactive Stroop Effect
@@ -52,41 +52,14 @@
         Get Ready...</p>
 </div>
 
-<div id="ready3" style="display: none">
-    <hr><p style="text-align: center;font: 3em sans-serif;">
-        Get Ready...</p>
-</div>
-
 <div id="test" style="display: none;">
-    <h2 style="text-align: center;" id="header-text">Word Set #1</h2>
-    <div style="text-align: center;"><img src = "https://wave-rider.github.io/StroopEffect/stroopa.gif" id="test-image">
+    <h2 style="text-align: center;" id="header-text">Word Set</h2>
+    <div style="text-align: center;"><img src = "https://pizzaman20000.github.io/StroopEffect/stroopa.gif" id="test-image">
         
         <form>
         <input id="submit-button" type="button" value=" Finish " onclick="endIt();" style="padding: 10px;">
-        <input id="continue-experiment" type="button" value=" Continue Experiment " onclick="continueIt()" style="display: none;text-align: center; padding: 10px;">
         </form>
-        <div style="margin: 10px; display: none;" id="test-results">
-            <a href="#" onclick="show_results();">Test results</a>
-        </div>
     </div>
-</div>
-
-<div class="container" id="results" style="display: none">
-    <header>
-      <h3>Test results</h3>
-    </header>
-    <div class="table-wrapper">
-      <table class="table-users">
-        <tr>
-          <th>&nbsp;</th>
-          <th>First Name</th>
-          <th>First Test</th>
-          <th>Second Test</th>
-        </tr>
-      </table>
-    <div style="text-align: center;"><a href="#" onclick="show('index', 'results');">Main</a></div>
-    </div>
-  
 </div>
 
 <script>
@@ -95,6 +68,11 @@
       document.getElementById(hidden).style.display='none';
       return false;
     }
+
+    //https://stackoverflow.com/questions/45136711/javascript-random-generate-0-or-1-integer
+    var test_number = Math.round(Math.random());
+    var tests = ['group1', 'group2'];
+    let test_name = tests[test_number];
 
     function goToReady2(){
         show('ready2', 'ready');
@@ -105,56 +83,34 @@
 
     var timeOne;
     var timeTwo;
-    var timer = [];
-    var counter = 0;
+    var timer;
     
     function startIt() {
         show('test', 'ready2');
         timeOne = new Date().getTime();
-    }
-
-    function continueIt() {
-        show('ready3', 'test');
-        document.getElementById('submit-button').style.display = 'none';
-        document.getElementById('continue-experiment').style.display = 'none';
-        setTimeout(function(){ 
-            show('test', 'ready3');
-            document.getElementById('header-text').innerText = "Word Set #2";
+        if (test_number == 0){
+            document.getElementById('test-image').src = "https://wave-rider.github.io/StroopEffect/stroopa.gif";
+        }
+        else {
             document.getElementById('test-image').src = "https://wave-rider.github.io/StroopEffect/stroopb.gif";
-            document.getElementById('submit-button').style.display = '';
-            document.getElementById('continue-experiment').style.display = 'none';
-            timeOne = new Date().getTime();
-         }, 3000);
-        
+        }       
     }
-    
+ 
     function endIt() {
         timeTwo = new Date().getTime();
         var your_time = (timeTwo-timeOne)/1000;
-        timer.push(your_time);
-        if (counter == 0){
-            alert("It took you " + your_time + " seconds.");
-        }
-        else
+        timer = your_time;
+        var person = prompt("It took you " + your_time + " seconds. \n Please enter your name", "Harry Potter");
+        if (person!=null)
         {
-            var person = prompt("It took you " + your_time + " seconds. \n Please enter your name", "Harry Potter");
-            if (person!=null)
-            {
-                db.collection('users').add({
-                    firstName: person,
-                    firstTest: timer[0],
-                    secondTest: timer[1]
-                });
-            }   
-            document.getElementById('submit-button').style.display = 'none';
-            document.getElementById('test-results').style.display='block';
-            return;
-        }
-
-        counter++;
-       
+            db.collection(test_name).add({
+                name: person,
+                time: timer
+            });
+        }   
         document.getElementById('submit-button').style.display = 'none';
-        document.getElementById('continue-experiment').style.display = '';
+        document.getElementById('test-results').style.display='block';
+        return;
     }
 
     function show_results()
@@ -165,16 +121,15 @@
         const tr = `
             <tr data-id='${doc.id}'>
             <td>${index}</td>
-            <td>${doc.data().firstName}</td>
-            <td>${doc.data().firstTest}</td>
-            <td>${doc.data().secondTest}</td>
+            <td>${doc.data().name}</td>
+            <td>${doc.data().time}</td>
             </tr>
         `;
         tableUsers.insertAdjacentHTML('beforeend', tr);
         }
 
         // Real time listener
-        db.collection('users').onSnapshot(snapshot => {
+        db.collection(test_name).onSnapshot(snapshot => {
         var index = 1;
         snapshot.docChanges().forEach(change => {
             if(change.type === 'added') {
@@ -185,21 +140,20 @@
         })
     }
     </script>
+
+    <!-- The core Firebase JS SDK is always required and must be listed first -->
     <script src="https://www.gstatic.com/firebasejs/8.2.4/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.2.4/firebase-firestore.js"></script>
-
-    <!-- TODO: Add SDKs for Firebase products that you want to use
-        https://firebase.google.com/docs/web/setup#available-libraries -->
 
     <script>
     // Your web app's Firebase configuration
     var firebaseConfig = {
-        apiKey: "AIzaSyALmguTypLcvbYCFFVKo3YhTmrlIMg6Q5s",
-        authDomain: "colorexperiment-c34a9.firebaseapp.com",
-        projectId: "colorexperiment-c34a9",
-        storageBucket: "colorexperiment-c34a9.appspot.com",
-        messagingSenderId: "874993095832",
-        appId: "1:874993095832:web:311f330ca5f99e32d1aced"
+        apiKey: "AIzaSyBLG31RmG-0elhd5Gh_USTwW_yMRVNi7gI",
+        authDomain: "stroopeffect-31a86.firebaseapp.com",
+        projectId: "stroopeffect-31a86",
+        storageBucket: "stroopeffect-31a86.appspot.com",
+        messagingSenderId: "329527711115",
+        appId: "1:329527711115:web:88f5b083db20246a368b8e"
     };
 
     // Initialize Firebase
